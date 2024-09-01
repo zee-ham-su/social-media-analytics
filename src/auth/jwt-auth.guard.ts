@@ -1,49 +1,26 @@
-import { Injectable, CanActivate, ExecutionContext, UnauthorizedException, Logger } from '@nestjs/common';
+import { Injectable, ExecutionContext, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { Request } from 'express';
+import { AuthGuard } from '@nestjs/passport';
 
 @Injectable()
-export class JwtAuthGuard implements CanActivate {
-    private readonly logger = new Logger(JwtAuthGuard.name);
-
-    constructor(private readonly jwtService: JwtService) { }
+export class JwtAuthGuard extends AuthGuard('jwt') {
+    constructor(private jwtService: JwtService) {
+        super();
+    }
 
     async canActivate(context: ExecutionContext): Promise<boolean> {
-        const request: Request = context.switchToHttp().getRequest();
-        const token = this.extractTokenFromHeader(request);
+        const request = context.switchToHttp().getRequest();
+        const token = request.headers.authorization?.split(' ')[1];
 
         if (!token) {
-            this.logger.warn('No token provided');
-            throw new UnauthorizedException('No token provided');
+            throw new UnauthorizedException('Token not found');
         }
 
         try {
-            const payload = await this.jwtService.verifyAsync(token);
-
-            if (this.isExpiredToken(payload)) {
-                this.logger.warn('Token has expired');
-                throw new UnauthorizedException('Token has expired');
-            }
-
-            request['user'] = payload;
-        } catch (error) {
-            this.logger.error('Invalid token', error.stack);
+            await this.jwtService.verifyAsync(token, { secret: process.env.JWT_SECRET });
+            return true;
+        } catch (e) {
             throw new UnauthorizedException('Invalid token');
         }
-
-        return true;
-    }
-
-    private extractTokenFromHeader(request: Request): string | undefined {
-        const authHeader = request.headers.authorization;
-        if (!authHeader) return undefined;
-
-        const [bearer, token] = authHeader.split(' ');
-        return bearer === 'Bearer' ? token : undefined;
-    }
-
-    private isExpiredToken(payload: any): boolean {
-        const currentTime = Math.floor(Date.now() / 1000);
-        return payload.exp < currentTime;
     }
 }
