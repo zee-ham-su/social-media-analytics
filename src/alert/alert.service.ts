@@ -1,26 +1,36 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Alert } from './entities/alert.entity';
 import { CreateAlertDto } from './dto/create-alert.dto';
 import { UpdateAlertDto } from './dto/update-alert.dto';
 
 @Injectable()
 export class AlertService {
-  create(createAlertDto: CreateAlertDto) {
-    return 'This action adds a new alert';
+  constructor(
+    @InjectRepository(Alert)
+    private readonly alertRepository: Repository<Alert>,
+  ) { }
+
+  async create(createDto: CreateAlertDto): Promise<Alert> {
+    const alert = this.alertRepository.create(createDto);
+    return this.alertRepository.save(alert);
   }
 
-  findAll() {
-    return `This action returns all alert`;
+  async findAll(): Promise<Alert[]> {
+    return this.alertRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} alert`;
+  async findOne(id: number): Promise<Alert> {
+    return this.alertRepository.findOne({ where: { id } });
   }
 
-  update(id: number, updateAlertDto: UpdateAlertDto) {
-    return `This action updates a #${id} alert`;
+  async update(id: number, updateDto: UpdateAlertDto): Promise<Alert> {
+    await this.alertRepository.update(id, updateDto);
+    return this.findOne(id);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} alert`;
+  async remove(id: number): Promise<void> {
+    await this.alertRepository.delete(id);
   }
 }

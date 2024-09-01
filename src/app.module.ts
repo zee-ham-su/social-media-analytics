@@ -1,6 +1,4 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { UserModule } from './user/user.module';
@@ -8,6 +6,7 @@ import { SocialMediaAccountModule } from './social-media-account/social-media-ac
 import { PostModule } from './post/post.module';
 import { AnalyticsDataModule } from './analytics-data/analytics-data.module';
 import { AlertModule } from './alert/alert.module';
+import { AuthModule } from './auth/auth.module';
 
 
 @Module({
@@ -30,8 +29,7 @@ import { AlertModule } from './alert/alert.module';
     PostModule,
     AnalyticsDataModule,
     AlertModule,
+    AuthModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
 })
 export class AppModule {}

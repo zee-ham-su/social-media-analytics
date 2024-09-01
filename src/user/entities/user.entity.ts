@@ -1,7 +1,8 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
 import { SocialMediaAccount } from '../../social-media-account/entities/social-media-account.entity';
 import { Post } from '../../post/entities/post.entity';
-
+import { Alert } from '../../alert/entities/alert.entity';
+import { AnalyticsData } from 'src/analytics-data/entities/analytics-datum.entity';
 @Entity('users')
 
 export class User {
@@ -31,4 +32,10 @@ export class User {
 
     @OneToMany(() => Post, post => post.user)
     posts: Post[];
+
+    @OneToMany(() => AnalyticsData, analyticsData => analyticsData.user)
+    analyticsData: AnalyticsData[];
+
+    @OneToMany(() => Alert, alert => alert.user)
+    alerts: Alert[];
 }

@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToOne, UpdateDateColumn } from 'typeorm';
 import { User } from '../../user/entities/user.entity';
 
 @Entity('posts')
@@ -7,17 +7,32 @@ export class Post {
     id: number;
 
     @Column()
+    account_id: number;
+
+    @Column()
+    platform: string;
+
+    @Column()
     content: string;
 
     @Column()
-    post_date: Date;
+    likes: number;
 
-    @ManyToOne(() => User, user => user.posts)
-    user: User;
+    @Column()
+    comments: number;
+
+    @Column()
+    post_id: number;
+
+    @Column()
+    shares: number;
 
     @CreateDateColumn()
     created_at: Date;
 
     @UpdateDateColumn()
     updated_at: Date;
+    
+    @ManyToOne(() => User, user => user.posts)
+    user: User;
 }
