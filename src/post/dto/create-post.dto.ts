@@ -1,1 +1,4 @@
-export class CreatePostDto {}
+export class CreatePostDto {
+    content: string;
+    post_date: Date;
+}

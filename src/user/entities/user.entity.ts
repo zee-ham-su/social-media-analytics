@@ -1,5 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
 import { SocialMediaAccount } from '../../social-media-account/entities/social-media-account.entity';
+import { Post } from '../../post/entities/post.entity';
 
 @Entity('users')
 
@@ -27,4 +28,7 @@ export class User {
 
     @OneToMany(() => SocialMediaAccount, socialMediaAccount => socialMediaAccount.user)
     socialMediaAccounts: SocialMediaAccount[];
+
+    @OneToMany(() => Post, post => post.user)
+    posts: Post[];
 }
