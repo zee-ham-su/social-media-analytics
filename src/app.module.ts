@@ -7,6 +7,7 @@ import { PostModule } from './post/post.module';
 import { AnalyticsDataModule } from './analytics-data/analytics-data.module';
 import { AlertModule } from './alert/alert.module';
 import { AuthModule } from './auth/auth.module';
+import { SocialMediaModule } from './social-media/social-media.module';
 
 
 @Module({
@@ -30,6 +31,7 @@ import { AuthModule } from './auth/auth.module';
     AnalyticsDataModule,
     AlertModule,
     AuthModule,
+    SocialMediaModule,
   ],
 })
 export class AppModule {}
